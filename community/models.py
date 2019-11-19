@@ -32,11 +32,9 @@ class Community(models.Model):
     community_photo = models.ImageField(upload_to='communities')
     owner = models.ForeignKey(User, related_name='owners', on_delete=models.SET_NULL, null=True)
     members = models.ManyToManyField(User, related_name='members', help_text='Community members')
-    publish_date = models.DateTimeField(default=timezone.now)
     is_active = models.BooleanField(null=True)
 
     def publish(self):
-        self.publish_date = timezone.now()
         self.save()
 
     def __str__(self):
@@ -59,11 +57,9 @@ class FieldType(models.Model):
 class PostType(models.Model):
     name = models.CharField(max_length=100, null=True, help_text='Enter post type name')
     desc = models.CharField(max_length=1200, null=True, help_text='Enter post type description')
-    publish_date = communityCreationDate = models.DateTimeField(default=timezone.now)
     is_active = models.BooleanField(null=True)
 
     def publish(self):
-        self.publish_date = timezone.now()
         self.save()
 
     def __str__(self):
