@@ -36,6 +36,10 @@ class Community(models.Model):
     communityCreationDate = models.DateTimeField(default=timezone.now)
     isActive = models.BooleanField(null=True)
 
+    def publish(self):
+        self.communityCreationDate = timezone.now()
+        self.save()
+
     def __str__(self):
         return self.communityName
 
@@ -56,7 +60,12 @@ class FieldType(models.Model):
 class PostType(models.Model):
     postTypeName = models.CharField(max_length=100, null=True, help_text='Enter post type name')
     postTypeDesc = models.CharField(max_length=1200, null=True, help_text='Enter post type description')
+    postTypeCreatedDate = communityCreationDate = models.DateTimeField(default=timezone.now)
     isActive = models.BooleanField(null=True)
+
+    def publish(self):
+        self.postTypeCreatedDate = timezone.now()
+        self.save()
 
     def __str__(self):
         return self.postTypeName
@@ -71,6 +80,10 @@ class Post(models.Model):
     isActive = models.BooleanField(null=True)
     postCreator = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     postCreationDate = models.DateTimeField(null=True)
+
+    def publish(self):
+        self.postCreationDate = timezone.now()
+        self.save()
 
     def __str__(self):
         return self.postTitle
