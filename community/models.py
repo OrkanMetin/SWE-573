@@ -14,12 +14,11 @@ class User(models.Model):
     first_name = models.CharField(max_length=50, null=True, help_text='Enter your name')
     surname = models.CharField(max_length=50, null=True, help_text='Enter your surname')
     email = models.EmailField()
-    password = models.CharField(max_length=50, null=True, help_text='Enter your password')
     user_photo = models.ImageField(upload_to='users', blank=True)
     is_active = models.BooleanField(null=True)
 
     def __str__(self):
-        return self.user_name
+        return '%s %s' % (self.first_name, self.surname)
 
 
 class Community(models.Model):
@@ -29,6 +28,7 @@ class Community(models.Model):
     name = models.CharField(max_length=100, null=True, help_text='Enter community name')
     desc = models.CharField(max_length=200, null=True, help_text='Enter community description')
     semantic_tag = models.CharField(max_length=100, null=True, help_text='Enter related semantic tag')
+    slug = models.SlugField(max_length=100, null=True)
     community_photo = models.ImageField(upload_to='communities')
     owner = models.ForeignKey(User, related_name='owners', on_delete=models.SET_NULL, null=True)
     members = models.ManyToManyField(User, related_name='members', help_text='Community members')
@@ -57,6 +57,11 @@ class FieldType(models.Model):
 class PostType(models.Model):
     name = models.CharField(max_length=100, null=True, help_text='Enter post type name')
     desc = models.CharField(max_length=1200, null=True, help_text='Enter post type description')
+    related_community = models.ForeignKey(Community,
+                                          related_name='related_communities',
+                                          on_delete=models.SET_NULL,
+                                          null=True)
+    semantic_tag = models.CharField(max_length=100, null=True, help_text='Enter related semantic tag')
     is_active = models.BooleanField(null=True)
 
     def publish(self):
@@ -72,6 +77,7 @@ class Post(models.Model):
     title = models.CharField(max_length=100, null=True, help_text='Enter title of post as text')
     body = models.CharField(max_length=200, null=True, help_text='Enter body of post as text')
     semantic_tag = models.CharField(max_length=100, null=True, help_text='Tag comes from related community tag')
+    slug = models.SlugField(max_length=100, null=True)
     is_active = models.BooleanField(null=True)
     creator = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     publish_date = models.DateTimeField(null=True)
