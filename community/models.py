@@ -15,7 +15,6 @@ class User(models.Model):
     surname = models.CharField(max_length=50, null=True, help_text='Enter your surname')
     email = models.EmailField()
     password = models.CharField(max_length=50, null=True, help_text='Enter your password')
-    created_date = models.DateTimeField(default=timezone.now)
     user_photo = models.ImageField(upload_to='users', blank=True)
     is_active = models.BooleanField(null=True)
 
@@ -33,11 +32,11 @@ class Community(models.Model):
     community_photo = models.ImageField(upload_to='communities')
     owner = models.ForeignKey(User, related_name='owners', on_delete=models.SET_NULL, null=True)
     members = models.ManyToManyField(User, related_name='members', help_text='Community members')
-    created_date = models.DateTimeField(default=timezone.now)
+    publish_date = models.DateTimeField(default=timezone.now)
     is_active = models.BooleanField(null=True)
 
     def publish(self):
-        self.communityCreationDate = timezone.now()
+        self.publish_date = timezone.now()
         self.save()
 
     def __str__(self):
@@ -60,11 +59,11 @@ class FieldType(models.Model):
 class PostType(models.Model):
     name = models.CharField(max_length=100, null=True, help_text='Enter post type name')
     desc = models.CharField(max_length=1200, null=True, help_text='Enter post type description')
-    created_date = communityCreationDate = models.DateTimeField(default=timezone.now)
+    publish_date = communityCreationDate = models.DateTimeField(default=timezone.now)
     is_active = models.BooleanField(null=True)
 
     def publish(self):
-        self.created_date = timezone.now()
+        self.publish_date = timezone.now()
         self.save()
 
     def __str__(self):
@@ -79,10 +78,10 @@ class Post(models.Model):
     semantic_tag = models.CharField(max_length=100, null=True, help_text='Tag comes from related community tag')
     is_active = models.BooleanField(null=True)
     creator = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    created_date = models.DateTimeField(null=True)
+    publish_date = models.DateTimeField(null=True)
 
     def publish(self):
-        self.created_date = timezone.now()
+        self.publish_date = timezone.now()
         self.save()
 
     def __str__(self):
