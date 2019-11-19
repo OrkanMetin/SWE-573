@@ -1,0 +1,14 @@
+{% extends 'community/base.html' %}
+
+
+{% block content %}
+        {% for community in communities %}
+        <div class="community">
+        <p>Community Owner: {{ community.owner }}</p>
+        <h2><a href="{% url 'community_detail' pk=community.pk %}">{{ community.name }}</a></h2>
+        <p><img src="{{ community.community_photo }}" style="width:500px ; height:200px;"></p>
+        <p>{{ community.desc|linebreaksbr }}</p>
+        <hr>
+        </div>
+        {% endfor %}
+{% endblock %}

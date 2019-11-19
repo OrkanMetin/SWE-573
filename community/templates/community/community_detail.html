@@ -1,0 +1,17 @@
+{% extends 'community/base.html' %}
+
+{% block content %}
+    <div class="community">
+        {% if post.published_date %}
+            <div class="date">
+                Community Owner: {{ community.owner }}
+            </div>
+        {% endif %}
+        <h2>{{ community.name }}</h2>
+        <p><img src="../{{ community.community_photo }}" style="width:500px ; height:200px;"></p>
+        <p>{{ community.desc|linebreaksbr }}</p>
+        <div class="date">
+                Semantic Tag: {{ community.semantic_tag }}
+            </div>
+    </div>
+{% endblock %}
