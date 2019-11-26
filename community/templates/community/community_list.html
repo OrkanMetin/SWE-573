@@ -2,7 +2,7 @@
 
 
 {% block content %}
-        {% for community in communities %}
+        {% for community in community %}
         <div class="community">
         <p>Community Owner: {{ community.owner }}</p>
         <h2><a href="{% url 'community_detail' pk=community.pk %}">{{ community.name }}</a></h2>
