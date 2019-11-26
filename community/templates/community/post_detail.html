@@ -1,0 +1,17 @@
+{% extends 'community/base.html' %}
+
+{% block content %}
+    <div class="community">
+        {% if post.published_date %}
+            <div class="date">
+                Published By: {{ post.creator }}
+            </div>
+        {% endif %}
+        <h2>{{ post.title }}</h2>
+        <p>{{ post.body }}</p>
+        <p>{{ post.semantic_tag|linebreaksbr }}</p>
+        <div class="date">
+                Semantic Tag: {{ community.semantic_tag }}
+            </div>
+    </div>
+{% endblock %}
