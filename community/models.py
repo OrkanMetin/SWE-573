@@ -4,6 +4,8 @@ from django.utils import timezone
 from django.contrib import auth
 from django.contrib.auth import get_user_model
 from django.contrib.postgres.fields import JSONField
+from django.forms import ModelForm
+from enum import Enum
 
 
 class User(models.Model):
@@ -27,7 +29,7 @@ class Community(models.Model):
     """
     name = models.CharField(max_length=100, null=True, help_text='Enter community name')
     desc = models.CharField(max_length=200, null=True, help_text='Enter community description')
-    semantic_tag = models.CharField(max_length=100, null=True, help_text='Enter related semantic tag')
+    semantic_tag = models.CharField(max_length=500, null=True, help_text='Enter related semantic tag')
     slug = models.SlugField(max_length=100, null=True)
     community_photo = models.ImageField(upload_to='communities')
     owner = models.ForeignKey(User, related_name='owners', on_delete=models.SET_NULL, null=True)
@@ -41,19 +43,6 @@ class Community(models.Model):
         return self.name
 
 
-class FieldType(models.Model):
-    name = models.CharField(max_length=100, null=True, help_text='Enter data type name')
-    # CharField eg: Geolocation
-    max_length = models.CharField(max_length=100, null=True, help_text='Maxlength')
-    # eg: maxlength=100
-    is_null = models.CharField(max_length=100, null=True, help_text='Can be null?')
-
-    # eg: maxlength=100
-
-    def __str__(self):
-        return self.name
-
-
 class PostType(models.Model):
     name = models.CharField(max_length=100, null=True, help_text='Enter post type name')
     desc = models.CharField(max_length=1200, null=True, help_text='Enter post type description')
@@ -61,11 +50,23 @@ class PostType(models.Model):
                                           related_name='related_communities',
                                           on_delete=models.SET_NULL,
                                           null=True)
-    semantic_tag = models.CharField(max_length=100, null=True, help_text='Enter related semantic tag')
+    semantic_tag = models.CharField(max_length=500, null=True, help_text='Enter related semantic tag')
+    semantic_code = models.CharField(max_length=20, null=True, help_text='Enter related semantic tag')
     is_active = models.BooleanField(null=True)
+    creator = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 
     def publish(self):
         self.save()
+
+    def __str__(self):
+        return self.name
+
+
+class PostTypeObject(models.Model):
+    name = models.CharField(max_length=200)
+    community = models.ForeignKey(Community, on_delete=models.PROTECT)
+    fields = JSONField()
+    is_archived = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
