@@ -5,43 +5,58 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+
     <link href="//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="{% static 'css/community.css' %}">
     <script src="{% static 'js/data-form.js' %}"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.js" integrity="sha256-qs5p0BFSqSvrstBxPvex+zdyrzcyGdHNeNmAirO2zc0=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" integrity="sha256-9mbkOfVho3ZPXfM7W8sV2SndrGDuh7wuyLjtsWeTI1Q=" crossorigin="anonymous" />
+
     <title>Welcome munity.com</title>
 </head>
 <body>
     <div class="page-header">
         {% if user.is_authenticated %}
-        <a href="{% url 'post_new' %}" class="top-menu"><span class="glyphicon glyphicon-plus"></span></a>
         <p class="top-menu">Hello {{ user.username }} <small>(<a href="{% url 'logout' %}">Log out</a>)</small></p>
         {% else %}
+        <a href="{% url 'signup' %}" class="top-menu"><span class="glyphicon glyphicon-plus-sign"></span></a>
         <a href="{% url 'login' %}" class="top-menu"><span class="glyphicon glyphicon-lock"></span></a>
         {% endif %}
         <h1><a href="/">Munity.com</a>
         <p style="font-size:21px">Your Community Platform</p>
         </h1>
-        <div class="topnav">
-  <a class="active" href="#home">Home</a>
-  <a href="#about">About</a>
-  <a href="#contact">Contact</a>
-  <a href="{% url 'community_list'%}">List My Communities</a>
-  <a href="{% url 'post_list'%}">List My Posts</a>
-  <input type="text" placeholder="Search..">
+        <div>
+              <nav class="navbar navbar-default">
+              <div class="container-fluid">
+                <ul class="nav navbar-nav">
+                    <li class="{% if navigation == 'home' %}active{% endif %}"><a href="{% url 'home'%}">Home</a></li>
+                    <li class="{% if navigation == 'about' %}active{% endif %}"><a href="{% url 'about'%}">About</a></li>
+                    <li class="{% if navigation == 'contact' %}active{% endif %}"><a href="{% url 'contact'%}">Contact</a></li>
+                    {% if is_authenticated %}<li class="{% if navigation == 'create_community' %}active{% endif %}"><a href="{% url 'create_community'%}">Create Community</a></li>{% endif %}
+                    {% if is_authenticated %}<li class="{% if navigation == 'list_my_communities' %}active{% endif %}"><a href="{% url 'list_my_communities'%}">List My Communities</a></li>{% endif %}
+                    {% if is_authenticated %}<li class="{% if navigation == 'join_my_communities' %}active{% endif %}"><a href="{% url 'join_my_communities'%}">My Joined Communities</a></li>{% endif %}
+                    {% if is_authenticated %}<li class="{% if navigation == 'post_list' %}active{% endif %}"><a href="{% url 'post_list'%}">List My Posts</a></li>{% endif %}
+                </ul>
+                 <form method="POST" class="navbar-form navbar-right" action="{% url 'search_results' %}">{% csrf_token %}
+                  <div class="form-group">
+                    <input type="text" class="form-control" name="search" placeholder="Search" value="{% if search_text != '' %}{{ search_text }}{% endif %}">
+                  </div>
+                  <button type="submit" class="btn btn-default">Submit</button>
+                </form>
+              </div>
+            </nav>
+        </div>
 
 </div>
 
     </div>
     <div class="content container">
         <div class="row">
-            <div class="col-md-8">
             {% block content %}
             {% endblock %}
-            </div>
         </div>
     </div>
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 </body>

@@ -1,0 +1,17 @@
+{% extends 'community/base.html' %}
+
+{% block content %}
+    {% if search_results.count != 0 %}
+        {% for community in search_results %}
+            <div class="community">
+            <p>Community Owner: {{ community.owner }}</p>
+            <h2><a{% if is_authenticated %} href="{% url 'community_detail' pk=community.pk %}"{% endif %}>{{ community.name }}</a></h2>
+            <p><img src="{{ community.community_photo }}" style="width:500px ; height:200px;"></p>
+            <p>{{ community.desc|linebreaksbr }}</p>
+            <hr>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>Aradığınız " {{ search_text }} " Kelime Bulunamadı !!!</p>
+    {% endif %}
+{% endblock %}

@@ -1,66 +1,79 @@
 {% extends 'community/base.html' %}
+
 {% block content %}
-    <div class="community" style="float: left">
-        {% if posts.published_date %}
+
+        <div class="col-md-7 blogShort" style="margin-bottom: 100px">
+            <h2>{{ community.name }}</h2>
+            <p><img src="../../{{ community.community_photo }}" style="width:650px ; height:300px;"></p>
+            <p>{{ community.desc|linebreaksbr }}</p>
             <div class="date">
-                Community Owner: {{ community.owner }}
+                Body : {{ community }}
             </div>
+            <p></p>
+
+            <a href="{% url 'new_post' community.id %}" class="btn btn-default">Add Generic Post</a>
+            <a href="{% url 'new_generic_post_type' community.id %}" class="btn btn-default">Create New Post Type</a>
+            <a href="{% url 'manage_community' pk=community.pk %}" class="btn btn-default pull-right">Manage</a>
+
+
+        </div>
+
+        <style>
+        /* Tooltip container */
+        .tooltipz {
+          position: relative;
+          display: inline-block;
+          border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+          margin-right: 10px;
+        }
+
+        /* Tooltip text */
+        .tooltipz .tooltiptextz {
+          visibility: hidden;
+          width: 120px;
+          background-color: black;
+          color: #fff;
+          text-align: center;
+          padding: 5px 0;
+          border-radius: 6px;
+
+          /* Position the tooltip text - see examples below! */
+          position: absolute;
+          z-index: 1;
+        }
+        .tooltipz .tooltiptextz {
+          width: 120px;
+          bottom: 100%;
+          left: 50%;
+          margin-left: -60px; /* Use half of the width (120/2 = 60), to center the tooltip */
+        }
+        /* Show the tooltip text when you mouse over the tooltip container */
+        .tooltipz:hover .tooltiptextz {
+          visibility: visible;
+        }
+        </style>
+
+
+        {% if posts %}
+            {% for posts in posts %}
+                {% if posts.is_active %}
+                <div class="col-md-7 blogShort" style="border: 2px solid #000; margin-bottom: 50px;">
+                    <h1 style="text-decoration: underline">{{ posts.title }}</h1>
+                    <p style="border: 1px solid #ccc; padding: 5px;">{{ posts.body }}</p>
+                    <div style="border: 1px solid #ccc; padding: 5px;"><div style="margin-bottom: 10px;">Semantic Tag : {% for posi in posts.semantic_tag %}
+                        <div class="tooltipz">{{ posi.label }}<span class="tooltiptextz"><a href="{{ posi.concepturi }}" target="_blank" style="color:#fff;">{{ posi.id }}</a></span></div>
+                    {% endfor %}</div>
+                    <p>Creator : {{ posts.owner }}</p>
+                    <p>Publish Date : {{ posts.publish_date }}</p>
+                    <a class="btn btn-default pull-right" style="margin: 10px;" href="{% url 'post_detail' pk=posts.pk %}">READ MORE</a>
+                </div>
+                </div>
+                {% endif %}
+            {% endfor %}
         {% endif %}
-        <h2>{{ community.name }}</h2>
-        <p><img src="../../{{ community.community_photo }}" style="width:500px ; height:200px;"></p>
-        <p>{{ community.desc|linebreaksbr }}</p>
-        <div class="date">
-                Semantic Tag: {{ community.semantic_tag }}
-            </div>
-    </div>
-<div style="float: left">
-
-</div>
-
-<div style="float: left">
 
 
 
-    <form action="{% url 'create_data_type' community.id %}" id="edit_data_type_form" method="post" novalidate>
-        {% csrf_token %}
-        <div class="form-group">
-            <label for="InputDataTypeName">Data Type Name</label>
-            <input type="text" class="form-control" id="InputDataTypeName" aria-describedby="dataTypeName"
-                placeholder="Enter data type name" name="title">
-        </div>
-        <div class="input-group-btn">
-            <button type="submit" class="btn btn-primary">Create Data Type</button>
-            <button class="btn btn-danger" type="submit" name="cancel" value="cancel"
-                style="margin-left: 10px;">Cancel</button>
-        </div>
-        <br /><br /><br /><br /><br /><br />
-        <h5>Your Data Type must contain at least one custom field.</h5>
-        {% if error_message_fields %}<p style="color: red"><strong>{{ error_message_fields }}</strong></p>{% endif %}
-        <br />
-        <div id="fields" style="width: 1000px"></div>
-        <div id="hiddenInputs" style="width: 1000px"></div>
-    </form>
 
-    <div class="input-group-btn">
-        <button class="btn btn-primary" type="button" onclick="fields();">Add Field</button>
-    </div>
 
-    <!-- Include jQuery -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
-    <!--Load Bootstrap JavaScript-->
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
-        integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
-        crossorigin="anonymous"></script>
-
-    <script>
-
-        $(document).ready(function () {
-            field = 0;
-            option = 0;
-        });
-    </script>
-
-</div>
 {% endblock %}

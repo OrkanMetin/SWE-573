@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!--    Load Bootstrap via CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+        integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+    <style>
+        .textboxwWikiInfo {
+        visibility: hidden;
+
+        background-color: #6A6A6A;
+        color: #fff;
+        text-align: center;
+        border-radius: 6px;
+        padding: 5px;
+
+        /* Position the tooltip */
+        position: absolute;
+        z-index: 1;
+      }
+
+      .WikiItemTag {
+        display: inline;
+        background-color: #6A6A6A;
+        color: #fff;
+        padding: 3px;
+        border-radius: 6px;
+      }
+
+      .WikiItemTag:hover .textboxwWikiInfo {
+        visibility: visible;
+      }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+</head>
+
+<body>
+
+
+
+
+        <div>
+            {% if data_type_list %}
+            <ul class="list-group">
+                {% for data_type in data_type_list %}
+                {% if data_type.is_active %}
+                <li class="list-group-item">
+                    <p>{{data_type.title }}</p>
+                    </div>
+                </li>
+                {% endif %}
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+
+
+    <div class="container" style="width: 1000px; margin:0 auto;">
+
+        <!--    POST LIST -->
+        <div style="float: left; width: 600px;">
+            {% if data_type_object_list%}
+            {% for post in data_type_object_list %}
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <h5>{{ post.data_type.title }}</h5>
+                </li>
+                {% for field in post.fields.fields %}
+                <li class="list-group-item">
+
+                    <b>{{field.title}}:</b>
+                    {% if field.field_type == "Image" and field.value != "-" %}
+                    <img src="{{field.value}}" style="width: 320px;" />
+                    {% elif field.field_type == "Video" and field.value != "-" %}
+                    <video width="320" controls>
+                        <source src="{{field.value}}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    {% elif field.field_type == "Audio" and field.value != "-" %}
+                    <audio controls>
+                        <source src="{{field.value}}" type="audio/wav">
+                        <source src="{{field.value}}" type="audio/mpeg">
+                        Your browser does not support the audio tag.
+                    </audio>
+                    {% elif field.field_type == "Location" and field.value != "-" %}
+                    <a href="https://www.google.com/maps/search/?api=1&query={{field.value.lat}},{{field.value.lon}}">See Location on Google Maps</a>
+                    {% elif field.multi_choice == "off" %}
+                    {{field.value}}
+                    {% else %}
+                    {% for value in field.value %}
+                    {{value}} &nbsp;
+                    {% endfor %}
+                    {% endif %}
+                    {% endfor %}
+                </li>
+                {% if post.tags.tags %}
+                <li class="list-group-item">
+                    {% for tag in post.tags.tags%}
+                    <p class="WikiItemTag">{{tag.tag}}<span class="textboxwWikiInfo"><a href="{{tag.url}}"
+                                style="color:#FFFF;">{{tag.qid}}-{{tag.label}}<br />{{tag.description}}</a></span></p>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    {% endfor %}
+                </li>
+                {% endif %}
+
+            </ul>
+            </br>
+            {% endfor %}
+            {% else %}
+            <p>There is no post in this community.</p>
+            {% endif %}
+        </div>
+        <!--    POST LIST -->
+
+    </div>
+    </br></br>
+
+
+    <!--    FOOTER -->
+    <nav class="navbar fixed-bottom navbar-expand-lg navbar-light bg-light" style="height: 25px;"></nav>
+    <!--    FOOTER -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+        integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

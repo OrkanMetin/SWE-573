@@ -1,20 +1,60 @@
 {% extends 'community/base.html' %}
 
 {% block content %}
-    <div class="community">
-        {% if post.published_date %}
-            <div class="date">
-                Published By: {{ post.creator }}
-            </div>
+
+
+
+        <style>
+        /* Tooltip container */
+        .tooltipz {
+          position: relative;
+          display: inline-block;
+          border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+          margin-right: 10px;
+        }
+
+        /* Tooltip text */
+        .tooltipz .tooltiptextz {
+          visibility: hidden;
+          width: 120px;
+          background-color: black;
+          color: #fff;
+          text-align: center;
+          padding: 5px 0;
+          border-radius: 6px;
+
+          /* Position the tooltip text - see examples below! */
+          position: absolute;
+          z-index: 1;
+        }
+        .tooltipz .tooltiptextz {
+          width: 120px;
+          bottom: 100%;
+          left: 50%;
+          margin-left: -60px; /* Use half of the width (120/2 = 60), to center the tooltip */
+        }
+        /* Show the tooltip text when you mouse over the tooltip container */
+        .tooltipz:hover .tooltiptextz {
+          visibility: visible;
+        }
+        </style>
+
+
+        {% if post %}
+             {% if post.is_active %}
+                <div class="col-md-7 blogShort" style="border: 2px solid #000; margin-bottom: 50px;">
+                    <h1 style="text-decoration: underline">{{ post.title }}</h1>
+                    <p style="border: 1px solid #ccc; padding: 5px;">{{ post.body }}</p>
+                    <div style="border: 1px solid #ccc; padding: 5px;"><div style="margin-bottom: 10px;">Semantic Tag : {% for posi in post.semantic_tag %}
+                        <div class="tooltipz">{{ posi.label }}<span class="tooltiptextz"><a href="{{ posi.concepturi }}" target="_blank" style="color:#fff;">{{ posi.id }}</a></span></div>
+                    {% endfor %}</div>
+                    <p>Creator : {{ post.owner }}</p>
+                    <p>Publish Date : {{ post.publish_date }}</p>
+                    <a class="btn btn-default pull-right" style="margin: 10px;" href="{% url 'post_edit' pk=post.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
+                    </div>
+                </div>
+                {% endif %}
         {% endif %}
-        {% if user.is_authenticated %}
-        <a class="btn btn-default" href="{% url 'post_edit' pk=post.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
-        {% endif %}
-        <h2>{{ post.title }}</h2>
-        <p>{{ post.body }}</p>
-        <p>{{ post.semantic_tag|linebreaksbr }}</p>
-        <div class="date">
-                Semantic Tag: {{ community.semantic_tag }}
-            </div>
-    </div>
+
+
 {% endblock %}

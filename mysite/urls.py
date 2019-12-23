@@ -21,7 +21,9 @@ from django.contrib.auth import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('accounts/login/', views.LoginView.as_view(), name='login'),
+    path('login/', views.LoginView.as_view(), name='login'),
     path('accounts/logout/', views.LogoutView.as_view(next_page='/'), name='logout'),
+    path('accounts/password_change/', views.LoginView.as_view(), name='password_change'),
+    path('accounts/password_change/done/', views.LogoutView.as_view(next_page='/'), name='password_change_done'),
     path('', include('community.urls'))
 ]

@@ -1,0 +1,35 @@
+{% extends 'community/base.html' %}
+{% load static %}
+
+{% block content %}
+    {% if is_authenticated %}
+
+         <form method="POST" class="post-form">{% csrf_token %}
+                    <div class="form-group">
+                    <label for="InputDataTypeName">Post Type Name</label>
+                    <input type="text" class="form-control" id="InputDataTypeName" aria-describedby="dataTypeName" placeholder="Enter Post Type Name" name="title">
+                </div>
+                <div class="input-group-btn">
+                    <button type="submit" class="btn btn-primary">Create Post Type</button>
+                    <button class="btn btn-danger" type="submit" name="cancel" value="cancel" style="margin-left: 10px;">Cancel</button>
+                </div>
+                <br />
+                <h5>Your Post Type must contain at least one custom field.</h5>
+                {% if error_message_fields %}<p style="color: red"><strong>{{ error_message_fields }}</strong></p>{% endif %}
+                <br />
+                <div id="fields" style="width: 1000px"></div>
+                <div id="hiddenInputs" style="width: 1000px"></div>
+            </form>
+
+            <div class="input-group-btn">
+                <button class="btn btn-primary" type="button" onclick="fields();">Add Field</button>
+            </div>
+
+
+
+    {% endif %}
+        <script src="{% static 'js/wikidata.js' %}"></script>
+    <script>
+        $('#wiki-data-select').dropdown();
+    </script>
+{% endblock %}

@@ -1,14 +1,81 @@
 {% extends 'community/base.html' %}
 
-
 {% block content %}
-        {% for community in community %}
-        <div class="community">
-        <p>Community Owner: {{ community.owner }}</p>
-        <h2><a href="{% url 'community_detail' pk=community.pk %}">{{ community.name }}</a></h2>
-        <p><img src="{{ community.community_photo }}" style="width:500px ; height:200px;"></p>
-        <p>{{ community.desc|linebreaksbr }}</p>
-        <hr>
-        </div>
-        {% endfor %}
+
+
+
+    {% if community %}
+        {% if community.count != 0 %}
+            {% for community in community %}
+                <div class="community" style="border: 3px solid #000000;padding: 50px;">
+                <p>Community Owner: {{ community.owner }}</p>
+                <h2><a{% if is_authenticated %}{% if community.id in joined_community or community.owner == user %} href="{% url 'community_detail' pk=community.pk %}"{% endif %}{% endif %}>{{ community.name }}</a></h2>
+                <p><img src="{{ community.community_photo }}" style="width:650px ; height:350px;"></p>
+                <p style="margin-top: 30px; border: 2px solid #cccccc; padding: 10px">{{ community.description|linebreaksbr }}</p>
+                    {% if is_authenticated %}
+                          <button type="submit" name="join-unjoin" id="join-unjoin" value="{{ community.id }}" class="btn btn-default  join-unjoin pull-right">
+                              {% if joined_community.count == 0 %}
+                                  Join
+                              {% elif community.id in joined_community %}
+                                  UnJoin
+                              {% else %}
+                                  Join
+                              {% endif %}
+                          </button>
+                      {% endif %}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% else %}
+            {% if navigation == "join_my_communities" %}
+                <p>Herhangi Bir Community 'ye Katılmadınız !!!</p>
+            {% endif %}
+            {% if navigation == "list_my_communities"%}
+                <p>Herhangi Bir Community 'niz Bulunamadı !!!</p>
+            {% elif navigation == "home"  %}
+                <p>Herhangi Bir Community Bulunamadı !!!</p>
+            {% endif %}
+            {% if navigation == "search_results" %}
+                <p>Aradığınız " {{ search_text }} " Kelime Bulunamadı !!!</p>
+            {% endif %}
+    {% endif %}
+<script
+  src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+  crossorigin="anonymous"></script>
+
+<script>
+
+ $(function( $ ){
+     $( document ).ready(function() {
+
+         $("button").on("click", function(){
+             if (this.name == "join-unjoin"){
+                 var val = this.value;
+                    function jU() {
+                         return $.ajax({
+                             type: 'GET',
+                             url: '/join_unjoin_communitiy/'+val,
+                             async: false,
+                             xhrFields: {
+                                 withCredentials: true
+                             },
+                             headers: {
+                                 'Access-Control-Allow-Credentials': true,
+                                 'Access-Control-Allow-Origin': '*',
+                                 'Access-Control-Allow-Methods': 'GET',
+                                 'Access-Control-Allow-Headers': 'application/json',
+                             }
+                         });
+                     };
+                     $.when(jU()).done(function (response) {
+                         console.log(response);
+                             location.reload();
+                     });
+             }
+          });
+     });
+});
+</script>
+
 {% endblock %}

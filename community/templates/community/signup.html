@@ -1,0 +1,74 @@
+{% extends 'community/base.html' %}
+
+{% block content %}
+  <h2>Sign up</h2>
+
+  </form>
+
+
+            <form method="POST" class="form-horizontal" >{% csrf_token %}
+                {% for field in form %}
+
+                    {% if field.id_for_label == 'id_username' %}
+                      <div class="form-group">
+                        <label for="inputEmail3" class="col-sm-2 control-label">Username : </label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" name="username" maxlength="150" autofocus="" required="" id="id_username">
+                        </div>
+                      </div>
+                    {% endif %}
+
+                    {% if field.id_for_label == 'id_first_name' %}
+                      <div class="form-group">
+                        <label for="inputEmail3" class="col-sm-2 control-label">First Name : </label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" name="first_name" maxlength="30" id="id_first_name">
+                        </div>
+                      </div>
+                    {% endif %}
+
+                    {% if field.id_for_label == 'id_email' %}
+                      <div class="form-group">
+                        <label for="inputEmail3" class="col-sm-2 control-label">Last Name : </label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" name="last_name" maxlength="30" id="id_last_name">
+                        </div>
+                      </div>
+                    {% endif %}
+
+                    {% if field.id_for_label == 'id_email' %}
+                      <div class="form-group">
+                        <label for="inputEmail3" class="col-sm-2 control-label">Email : </label>
+                        <div class="col-sm-10">
+                            <input type="email" class="form-control" name="email" maxlength="254" required="" id="id_email">
+                        </div>
+                      </div>
+                    {% endif %}
+
+                    {% if field.id_for_label == 'id_password1' %}
+                      <div class="form-group">
+                        <label for="inputEmail3" class="col-sm-2 control-label">Password : </label>
+                        <div class="col-sm-10">
+                             <input type="password"  class="form-control" name="password1" required="" id="id_password1">
+                        </div>
+                      </div>
+                    {% endif %}
+
+                    {% if field.id_for_label == 'id_password2' %}
+                      <div class="form-group">
+                        <label for="inputEmail3" class="col-sm-2 control-label">Password Confirmation : </label>
+                        <div class="col-sm-10">
+                             <input type="password"  class="form-control" name="password2" required="" id="id_password2">
+                        </div>
+                      </div>
+                    {% endif %}
+
+                {% endfor %}
+
+                <button type="submit" class="save btn btn-default">Sign Up</button>
+            </form>
+
+
+
+
+{% endblock %}
